@@ -3,6 +3,7 @@
     const LOGIN = 0;
     const LOGOUT = 1;
     var provider = new firebase.auth.GoogleAuthProvider();
+    var refIdAndUserId = [];
     firebase.auth().signInWithPopup(provider).catch(function(error) {
         //console.log(error);
     }).then(function(result) {
@@ -26,6 +27,7 @@
         var userObj;
         var refId = "";
         var userList;
+        
         // verify in server
         verifyUser().then(function(data) {
             userList = data;
@@ -50,8 +52,38 @@
                 updateUserStatus(LOGIN, refId);
             }
             getOnlineUser(userList);
+            //sendMessage();
+            watchInboxMessage();
         });
 
+    }
+
+    function watchInboxMessage () {
+        // cut new message to old message
+        // notify user
+    }
+    // TODO: implement this when user open a chatbox
+    function loadMessageHistory () {
+
+    }
+    // NEXT: I got ref ID, time to send message when user click sent button
+    function sendMessage() {
+        var userId = "oXO9aXq2IHehGf4JsKOhcOjWyGT1";
+        refId = getRefIdFromUserId(userId);
+    }
+
+    // TODO: optimize this function
+    function getRefIdFromUserId(userId) {
+        //console.log(refIdAndUserId);
+        var ret = "";
+        $.each(refIdAndUserId, function(index, value) {
+            //console.log(value.userId.indexOf(userId));
+            if (value.userId == userId) {
+                ret = value.refId;
+                return;
+            }
+        });
+        return ret;
     }
 
     function getOnlineUser(l_userList) {
@@ -61,6 +93,7 @@
             if (l_userList.hasOwnProperty(key)) {
                 if (l_userList[key].loginStatus == 0) {
                     onlineArray.push(l_userList[key]);
+                    refIdAndUserId.push({refId: key, userId: l_userList[key].id});
                 }
             }
         }
