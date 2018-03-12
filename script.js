@@ -24,6 +24,7 @@
     // TODO: this sequence must be refactor
     function handleUserAuthentication (user) {
         var userObj;
+        var refId = "";
         // verify in server
         verifyUser().then(function(data) {
 
@@ -33,20 +34,29 @@
                     if (data[id].id === user.uid) {
                         userObj = {};
                         Object.assign(userObj, user);
+                        refId = id;
                         break;
                     }
                 }
             }
         }).then(function() {
-            // if in server, update
+            // if not in server, add user
             if (!userObj) {
                 console.log("add user");
                 addUser(user);
-            } else { // if not in server, add user
-                console.log("already in server");
+            } else { // if in server, update
+                console.log("already in server, update user status in refid", refId);
+                updateUserStatus(LOGIN, refId);
             }
         });
 
+    }
+
+    function updateUserStatus(status, referenceId) {
+        var udpateValue = firebase.database().ref('users/' + referenceId);
+        // Modify the 'first' and 'last' properties, but leave other data at
+        // adaNameRef unchanged.
+        udpateValue.update({ loginStatus: status });
     }
 
     function verifyUser () {
