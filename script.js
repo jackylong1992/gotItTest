@@ -1,4 +1,5 @@
 (function () {
+    // TODO: add failed case for api
     const LOGIN = 0;
     const LOGOUT = 1;
     var provider = new firebase.auth.GoogleAuthProvider();
@@ -16,14 +17,40 @@
 
         //readData();
         // 
-        verifyUser(result.user);
+        handleUserAuthentication(result.user);
     });
 
     // I need to find a way to add data before going to this function
-    function verifyUser (user) {
-        var userObj = {};
-        // if not in server, add user
-        addUser(user);
+    // TODO: this sequence must be refactor
+    function handleUserAuthentication (user) {
+        var userObj;
+        // verify in server
+        verifyUser().then(function(data) {
+
+            for (var id in data) {
+                if (data.hasOwnProperty(id)) {
+                    // console.log(data[id]);
+                    if (data[id].id === user.uid) {
+                        userObj = {};
+                        Object.assign(userObj, user);
+                        break;
+                    }
+                }
+            }
+        }).then(function() {
+            // if in server, update
+            if (!userObj) {
+                console.log("add user");
+                addUser(user);
+            } else { // if not in server, add user
+                console.log("already in server");
+            }
+        });
+
+    }
+
+    function verifyUser () {
+        return readData();
     }
 
     // wainting for binding signOut function
@@ -53,10 +80,14 @@
 
     // refer: https://firebase.google.com/docs/database/web/read-and-write
     function readData () {
-        var starCountRef = firebase.database().ref('/users');
-        starCountRef.on('value', function(snapshot) {
-          console.log(snapshot.val());
+        var promise = new Promise (function (resolve, reject) {
+            var starCountRef = firebase.database().ref('/users');
+            starCountRef.on('value', function(snapshot) {
+              console.log(snapshot.val());
+              resolve(snapshot.val());
+            });
         });
+        return promise;
     }
 
     function writeData(userID, value) {
