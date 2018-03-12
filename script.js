@@ -123,15 +123,18 @@
             id: user.uid,
             name: user.displayName,
             loginStatus : LOGIN,
-            isFree : true,
-            chatMessageHistory : [{
-                from : "",
-                value : ""
-            }],
-            chatMessageNew : [{
-                from : "",
-                value : ""
-            }]
+            isFree : true
+        });
+
+        var newUser = firebase.database().ref('/channel').push();
+        newUser.set({
+            id: user.uid,
+            message : "init"
+        }).then(function() {
+            firebase.database().ref('/channel/'+newUser.key+'/message').push().set({
+                from : "jacky",
+                text: ""
+            });
         });
     }
 
