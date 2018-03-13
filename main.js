@@ -3,7 +3,7 @@
     const LOGIN = 0;
     const LOGOUT = 1;
     var provider = new firebase.auth.GoogleAuthProvider();
-    var refIdAndUserId = [];
+    var userTable = [];
     firebase.auth().signInWithPopup(provider).catch(function(error) {
         //console.log(error);
     }).then(function(result) {
@@ -52,6 +52,13 @@
                 updateUserStatus(LOGIN, refId);
             }
             getOnlineUser(userList);
+            getMessageLog(user.uid).then(function(myMessageLog){
+                if (myMessageLog) {
+                    console.log('my message log =', myMessageLog);
+                } else {
+                    console.error("can't get message log");
+                }
+            });
             //sendMessage();
             watchInboxMessage();
         });
@@ -74,9 +81,9 @@
 
     // TODO: optimize this function
     function getRefIdFromUserId(userId) {
-        //console.log(refIdAndUserId);
+        //console.log(userTable);
         var ret = "";
-        $.each(refIdAndUserId, function(index, value) {
+        $.each(userTable, function(index, value) {
             //console.log(value.userId.indexOf(userId));
             if (value.userId == userId) {
                 ret = value.refId;
@@ -85,7 +92,19 @@
         });
         return ret;
     }
-
+    function getMessageLog (userId) {
+        return readData('/channel').then(function(snapshot){
+            // console.log("message log", snapshot)
+            for (var key in snapshot) {
+                if (snapshot.hasOwnProperty(key)) {
+                    if (snapshot[key].id == userId) {
+                        return snapshot[key];
+                    }
+                }
+            }
+            return null;
+        });
+    }
     function getOnlineUser(l_userList) {
         //console.log(l_userList);
         var onlineArray = [];
@@ -93,7 +112,7 @@
             if (l_userList.hasOwnProperty(key)) {
                 if (l_userList[key].loginStatus == 0) {
                     onlineArray.push(l_userList[key]);
-                    refIdAndUserId.push({refId: key, userId: l_userList[key].id});
+                    userTable.push({refId: key, userId: l_userList[key].id});
                 }
             }
         }
@@ -108,7 +127,7 @@
     }
 
     function verifyUser () {
-        return readData();
+        return readData('/users');
     }
 
     // wainting for binding signOut function
@@ -154,9 +173,9 @@
     }
 
     // refer: https://firebase.google.com/docs/database/web/read-and-write
-    function readData () {
+    function readData (link) {
         var promise = new Promise (function (resolve, reject) {
-            var starCountRef = firebase.database().ref('/users');
+            var starCountRef = firebase.database().ref(link);
             // starCountRef.on('value', function(snapshot) {
                 // this could be .once()
             starCountRef.once('value', function(snapshot) {
