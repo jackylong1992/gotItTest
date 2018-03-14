@@ -1,3 +1,5 @@
+// TODO: cannot chat with myself
+// 
 // ok -verify user, if user is not craeted, crate user space and data space
 // ok -if user is created, update user loginStatus
 function updateTitle(user) {
@@ -29,10 +31,10 @@ function handleUserAuthentication (user) {
     .then(function() {
         // if not in server, add user
         if (!userObj) {
-            console.log("add user");
+            // console.log("add user");
             addUser(user);
         } else { // if in server, update
-            console.log("already in server, update user status in refid", refId);
+            // console.log("already in server, update user status in refid", refId);
             updateUserLoginStatus(LOGIN, refId);
         }
         

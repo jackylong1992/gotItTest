@@ -1,5 +1,5 @@
 function createChatChannel (channelId) {
-    console.log('create chat channel');
+    // console.log('create chat channel');
     var newChannel = firebase.database().ref('/channel').push();
     newChannel.set({
         between: channelId,

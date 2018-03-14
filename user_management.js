@@ -38,7 +38,7 @@ function chooseUser() {
 
 // ok - when someone want to chat with you, they will change your user profile, then this function happen
 function handleUserChange (data) {
-    console.log('my user info change', data);
+    // console.log('my user info change', data);
     if (data.chatWith && data.chatWith.length) {
         // modify watch and sent link
         g_user.onChannel = data.chatWith;
@@ -84,11 +84,16 @@ function watchUserList () {
 
 function updateUserList (list) {
     // update userList to the view
-    console.log('update user List', list);
+    // console.log('update user List', list);
     var bindHtml = '';
     $('#userList ul').html(bindHtml);
     for (var user in list) {
-        bindHtml += '<li ' + 'id =' +list[user].id + '>' + list[user].name + '</li>';
+        if (!list[user].isFree) {
+            bindHtml += '<li class="busy"' + 'id =' +list[user].id + '>' + list[user].name + '</li>';
+        } else {
+            bindHtml += '<li ' + 'id =' +list[user].id + '>' + list[user].name + '</li>';
+        }
+        
     }
     $('#userList ul').html(bindHtml);
     $('#userList li').on('click', function() {
@@ -98,7 +103,6 @@ function updateUserList (list) {
             var clientRef = getReferenceById(g_user.clientId);
             isClientAvailable(clientRef).then((isAcquired) => {
                 if(!isAcquired) {
-                    // console.log("client is busy");
                     reject();
                 } else {
                     resolve();
@@ -106,15 +110,14 @@ function updateUserList (list) {
             })
         })
         .then(function() {
-            
             return isChatChannelExist(channelId);
         }, function() {
-            console.log("client is busy");
+            // console.log("client is busy");
             return Promise.reject();
         })
         .then( (value) => {
             if (value === null) return;
-            console.log('channel isExist =', value);
+            // console.log('channel isExist =', value);
             if (value) {
                 // get channel reference - auto get if channel exit
                 // watch/update this channel
@@ -128,12 +131,8 @@ function updateUserList (list) {
                 watchChatChannel();
             }
             
-        }, function() {
-            return Promise.reject();
         })
-        .then(acquireClient, function() {
-            return Promise.reject();
-        })
+        .then(acquireClient)
     });
 }
 
@@ -144,7 +143,7 @@ function createChannelListId (userId, clientId) {
     } else {
         ret = clientId + userId;
     }
-    console.log('channel id = ', ret)
+    // console.log('channel id = ', ret)
     return ret;
 }
 // TODO: when user list change, we have to update the reference
@@ -159,7 +158,7 @@ function acquireClient () {
 
 function releaseClient () {
     if (!g_user.clientId)  {
-        console.log("not connected to any client");
+        // console.log("not connected to any client");
         return;
     }
     var clientRef = getReferenceById(g_user.clientId);
