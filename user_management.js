@@ -14,6 +14,10 @@ var userList = [
     {
         uid : 4444,
         displayName: "Danny Hoang"
+    },
+    {
+        uid : 5555,
+        displayName: "Paul"
     }
 ];
 

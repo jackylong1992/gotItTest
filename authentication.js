@@ -1,5 +1,7 @@
 // TODO: cannot chat with myself
-// 
+// TODO: cannot handle user login statue
+// TODO: break promise chain still have error
+// TODO: strang issue when add new member
 // ok -verify user, if user is not craeted, crate user space and data space
 // ok -if user is created, update user loginStatus
 function updateTitle(user) {

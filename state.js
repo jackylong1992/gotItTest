@@ -12,9 +12,9 @@ function showMessage(msgList) {
     
     for (var message in msgList) {
         if (msgList[message].from.toString() == g_user.uid.toString()) {
-            bindHTML += '<li class=' +"fromMe" + '>' + msgList[message].text+ '</li>'
+            bindHTML += '<li class=' +"fromMe" + '>' + highlightURL(msgList[message].text)+ '</li>'
         } else {
-            bindHTML += '<li>' + msgList[message].text+ '</li>'
+            bindHTML += '<li>' + highlightURL(msgList[message].text) + '</li>'
         }
     }
     $('#messageSpace').html(bindHTML);
