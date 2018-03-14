@@ -1,21 +1,23 @@
-function createChatChannel () {
+function createChatChannel (channelId) {
+    console.log('create chat channel');
     var newChannel = firebase.database().ref('/channel').push();
     newChannel.set({
-        between: "id combination",
+        between: channelId,
         messageList : "init"
-    })
+    });
+    return newChannel.key;
 }
 
-function updateChatChannel (link, message, senderId) {
-    var messageList = firebase.database().ref(link + 'messageList').push();
+function updateChatChannel ( message, senderId) {
+    var messageList = firebase.database().ref('/channel/' +g_user.onChannel + '/messageList').push();
     messageList.set({
         from : senderId,
         text : message
     })
 }
 
-function watchChatChannel (link, cb) {
-    var chatChannel = firebase.database().ref(link +'messageList');
+function watchChatChannel ( cb) {
+    var chatChannel = firebase.database().ref('/channel/' + g_user.onChannel +'/messageList');
     return chatChannel.on('value', function(childSnapshot, prevChildKey) {
         //console.log('new val =', prevChildKey);
         console.log('child added event');
@@ -25,3 +27,20 @@ function watchChatChannel (link, cb) {
         }
     });
 }
+
+function isChatChannelExist (channelId) {
+    return readData('/channel').then(function(data) {
+        for (var channel in data) {
+            if(data[channel].between == channelId) {
+                g_user.onChannel = channel;
+                return true;
+            }
+        }
+        return false;
+    })
+}
+
+// example use
+// isChatChannelExist('11112221').then(function (value) {
+//     console.log('channel isExist =', value);
+// }) 

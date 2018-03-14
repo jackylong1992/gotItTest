@@ -45,6 +45,6 @@ function handleUserAuthentication (user) {
     .then(function() {
         watchMyInfo(refId);
         watchUserList();
-        watchChatChannel('/channel/-L7XCshe2qzEsYGrgBbf/');
+        //watchChatChannel('/channel/-L7XCshe2qzEsYGrgBbf/');
     });;
 }

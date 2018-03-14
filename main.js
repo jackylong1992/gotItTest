@@ -73,11 +73,11 @@
     function loadMessageHistory () {
 
     }
-    // NEXT: I got ref ID, time to send message when user click sent button
-    function sendMessage() {
-        var userId = "oXO9aXq2IHehGf4JsKOhcOjWyGT1";
-        refId = getRefIdFromUserId(userId);
-    }
+    // // NEXT: I got ref ID, time to send message when user click sent button
+    // function sendMessage() {
+    //     var userId = "oXO9aXq2IHehGf4JsKOhcOjWyGT1";
+    //     refId = getRefIdFromUserId(userId);
+    // }
 
     // TODO: optimize this function
     function getRefIdFromUserId(userId) {

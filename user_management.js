@@ -19,13 +19,16 @@ var userList = [
 
 var g_user = {
     uid: '',
-    displayName: ''
+    displayName: '',
+    onChannel: ''
 };
 
 const LOGIN = true;
 const LOGOUT = false;
 
 handleUserAuthentication(userList[0]);
+// api test ok
+
 
 // ok - when someone want to chat with you, they will change your user profile, then this function happen
 function handleUserChange (data) {
@@ -53,7 +56,37 @@ function updateUserList (list) {
     var bindHtml = '';
     $('#userList ul').html(bindHtml);
     for (var user in list) {
-        bindHtml += '<li>' + list[user].name + '</li>';
+        bindHtml += '<li ' + 'id =' +list[user].id + '>' + list[user].name + '</li>';
     }
     $('#userList ul').html(bindHtml);
+    $('#userList li').on('click', function() {
+        console.log(this.id);
+        var channelId = createChannelListId(this.id, g_user.uid);
+        isChatChannelExist(channelId).then(function (value) {
+            console.log('channel isExist =', value);
+            if (value) {
+                // get channel reference - auto get if channel exit
+                // watch/update this channel
+                watchChatChannel();
+            } else {
+                // create new channel
+                var channelRef = createChatChannel(channelId)
+                // get channel reference
+                g_user.onChannel = channelRef;
+                // watch/update this channel
+                watchChatChannel();
+            }
+        })
+    });
+}
+
+function createChannelListId (userId, clientId) {
+    var ret;
+    if (userId < clientId) {
+        ret = userId + clientId;
+    } else {
+        ret = clientId + userId;
+    }
+    console.log('channel id = ', ret)
+    return ret;
 }

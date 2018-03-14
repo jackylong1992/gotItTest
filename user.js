@@ -12,7 +12,7 @@ var clientReferenceMap = [];
 function sendMessage () {
     console.log("send");
     var message = $("#inputBox").val();
-    updateChatChannel ('/channel/-L7XCshe2qzEsYGrgBbf/', message, g_user.uid);
+    updateChatChannel ( message, g_user.uid);
 }
     // ok
 function getClientReferenceById (clientId) {
