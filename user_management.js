@@ -27,7 +27,12 @@ var g_user = {
 const LOGIN = true;
 const LOGOUT = false;
 
-handleUserAuthentication(userList[1]);
+
+function chooseUser() {
+    handleUserAuthentication(userList[$('#chooseUser').val()]);
+    $('#container').css("display","block");
+}
+//handleUserAuthentication(userList[1]);
 // api test ok
 
 
@@ -37,6 +42,7 @@ function handleUserChange (data) {
     if (data.chatWith && data.chatWith.length) {
         // modify watch and sent link
         g_user.onChannel = data.chatWith;
+        g_user.clientId = data.clientId;
         watchChatChannel();
     }
 }
@@ -48,11 +54,11 @@ function updateUserLoginStatus(status, referenceId) {
     udpateValue.update({ loginStatus: status, chatWith : '', isFree : true });
 }
 
-function updateUserStatus(referenceId, isFree, chatWith) {
+function updateUserStatus(referenceId, isFree, chatWith, clientId) {
     var udpateValue = firebase.database().ref('users/' + referenceId);
     // Modify the 'first' and 'last' properties, but leave other data at
     // adaNameRef unchanged.
-    udpateValue.update({chatWith : chatWith || '', isFree : isFree });
+    udpateValue.update({chatWith : chatWith || '', isFree : isFree, clientId : clientId });
 }
 
 function isClientAvailable(reference) {
@@ -89,7 +95,7 @@ function updateUserList (list) {
             var clientRef = getReferenceById(g_user.clientId);
             isClientAvailable(clientRef).then((isAcquired) => {
                 if(!isAcquired) {
-                    console.log("client is busy");
+                    // console.log("client is busy");
                     reject();
                 } else {
                     resolve();
@@ -99,6 +105,8 @@ function updateUserList (list) {
         .then(function() {
             
             return isChatChannelExist(channelId);
+        }, function() {
+            console.log("client is busy");
         })
         .then( (value) => {
             if (value === null) return;
@@ -134,9 +142,9 @@ function createChannelListId (userId, clientId) {
 // TODO: when user list change, we have to update the reference
 function acquireClient () {
     var clientRef = getReferenceById(g_user.clientId);
-    updateUserStatus(clientRef, false, g_user.onChannel);
+    updateUserStatus(clientRef, false, g_user.onChannel, g_user.uid);
     var myRef = getReferenceById(g_user.uid);
-    updateUserStatus(myRef, false, g_user.onChannel);
+    updateUserStatus(myRef, false, g_user.onChannel, g_user.clientId);
     return true;
 }
 
@@ -146,8 +154,8 @@ function releaseClient () {
         return;
     }
     var clientRef = getReferenceById(g_user.clientId);
-    updateUserStatus(clientRef, true, "");
+    updateUserStatus(clientRef, true, "", '');
     var myRef = getReferenceById(g_user.uid);
-    updateUserStatus(myRef, true, '');
+    updateUserStatus(myRef, true, '', '');
     g_user.clientId = '';
 }

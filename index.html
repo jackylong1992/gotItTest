@@ -8,14 +8,19 @@
 <body class="container">
     <!-- Markup -->
     <h3 id='title'>this is test from jacky</h3>
-    <div id='userList'>
-        <ul>
-            waiting for user!!!
-        </ul>
+    <input id="chooseUser" type="number">
+    <button onclick="chooseUser()">Choose</button>
+    <div id="container" style="display:none">
+        <div id='userList'>
+            <ul>
+                waiting for user!!!
+            </ul>
+        </div>
+        <input id='inputBox' type="text">
+        <button onclick='sendMessage()'>Send</button>
+        <button onclick='releaseClient()'>Release client</button>    
     </div>
-    <input id='inputBox' type="text">
-    <button onclick='sendMessage()'>Send</button>
-    <button onclick='releaseClient()'>Release client</button>
+    
     <!-- Dependencies -->
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <script>
