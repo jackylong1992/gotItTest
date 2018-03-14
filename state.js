@@ -1,5 +1,6 @@
 function changeToChatState() {
     $('#messageSpace').show();
+    $('#messageSpace').html('');
 }
 
 function changeToMenuState() {
@@ -8,6 +9,7 @@ function changeToMenuState() {
 
 function showMessage(msgList) {
     var bindHTML = '';
+    
     for (var message in msgList) {
         if (msgList[message].from.toString() == g_user.uid.toString()) {
             bindHTML += '<li class=' +"fromMe" + '>' + msgList[message].text+ '</li>'

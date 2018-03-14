@@ -81,23 +81,23 @@ function referenceMapping () {
             chatWith : ""
         });
 
-        var newUser = firebase.database().ref('/channel').push();
-        newUser.set({
-            id: user.uid,
-            message : "init"
-        }).then(function() {
-            var temp = firebase.database().ref('/channel/'+newUser.key+'/message').push();
-            temp.set({
-                with : "soneoneId",
-                textList: ""
-            });
-            return temp.key;
-        }).then(function(ref){
-            firebase.database().ref('/channel/'+newUser.key+'/message/'+ref+'/textList').push().set({
-                isReceive: true,
-                text: 'hi there!'
-            });
-        });
+        // var newUser = firebase.database().ref('/channel').push();
+        // newUser.set({
+        //     id: user.uid,
+        //     message : "init"
+        // }).then(function() {
+        //     var temp = firebase.database().ref('/channel/'+newUser.key+'/message').push();
+        //     temp.set({
+        //         with : "soneoneId",
+        //         textList: ""
+        //     });
+        //     return temp.key;
+        // }).then(function(ref){
+        //     firebase.database().ref('/channel/'+newUser.key+'/message/'+ref+'/textList').push().set({
+        //         isReceive: true,
+        //         text: 'hi there!'
+        //     });
+        // });
     }
     // ok
     
