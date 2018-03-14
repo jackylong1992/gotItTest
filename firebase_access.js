@@ -16,15 +16,13 @@ function updateChatChannel ( message, senderId) {
     })
 }
 
-function watchChatChannel ( cb) {
+function watchChatChannel ( ) {
     var chatChannel = firebase.database().ref('/channel/' + g_user.onChannel +'/messageList');
-    return chatChannel.on('value', function(childSnapshot, prevChildKey) {
+    return chatChannel.on('value', function(childSnapshot) {
         //console.log('new val =', prevChildKey);
-        console.log('child added event');
-        console.log(childSnapshot.val());
-        if (cb) {
-            cb(childSnapshot.val());
-        }
+        // console.log('child added event');
+        // console.log(childSnapshot.val());
+        showMessage(childSnapshot.val());
     });
 }
 

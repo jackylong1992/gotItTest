@@ -1,0 +1,12 @@
+#messageSpace {
+    width: 600px;
+    min-height:  600px;
+    background-color: blue;
+    color: black;
+    border: solid brown 5px;
+    display: none;
+}
+
+.fromMe {
+    color: red;
+}

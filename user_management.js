@@ -44,6 +44,9 @@ function handleUserChange (data) {
         g_user.onChannel = data.chatWith;
         g_user.clientId = data.clientId;
         watchChatChannel();
+        changeToChatState();
+    } else {
+        changeToMenuState();
     }
 }
 
@@ -107,6 +110,7 @@ function updateUserList (list) {
             return isChatChannelExist(channelId);
         }, function() {
             console.log("client is busy");
+            return Promise.reject();
         })
         .then( (value) => {
             if (value === null) return;
@@ -124,8 +128,12 @@ function updateUserList (list) {
                 watchChatChannel();
             }
             
+        }, function() {
+            return Promise.reject();
         })
-        .then(acquireClient)
+        .then(acquireClient, function() {
+            return Promise.reject();
+        })
     });
 }
 
@@ -145,6 +153,7 @@ function acquireClient () {
     updateUserStatus(clientRef, false, g_user.onChannel, g_user.uid);
     var myRef = getReferenceById(g_user.uid);
     updateUserStatus(myRef, false, g_user.onChannel, g_user.clientId);
+    changeToChatState();
     return true;
 }
 
@@ -158,4 +167,5 @@ function releaseClient () {
     var myRef = getReferenceById(g_user.uid);
     updateUserStatus(myRef, true, '', '');
     g_user.clientId = '';
+    changeToMenuState();
 }
