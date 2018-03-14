@@ -1,36 +1,18 @@
-var userList = [
-    {
-        uid : 1111,
-        displayName: "Long Nguyen"
-    },
-    {
-        uid : 2222,
-        displayName: "Loka Nguyen"
-    },
-    {
-        uid : 3333,
-        displayName: "Jacob Vu"
-    },
-    {
-        uid : 4444,
-        displayName: "Danny Hoang"
-    }
-];
-const LOGIN = 0;
-const LOGOUT = 1;
+
+
 var referenceMap = [];
 var clientReferenceMap = [];
 
 //handleUserAuthentication(userList[0]);
 // createChatChannel ();
 
-watchChatChannel('/channel/-L7XCshe2qzEsYGrgBbf/');
+// watchChatChannel('/channel/-L7XCshe2qzEsYGrgBbf/');
 
 
 function sendMessage () {
     console.log("send");
     var message = $("#inputBox").val();
-    updateChatChannel ('/channel/-L7XCshe2qzEsYGrgBbf/', message, '2222');
+    updateChatChannel ('/channel/-L7XCshe2qzEsYGrgBbf/', message, g_user.uid);
 }
     // ok
 function getClientReferenceById (clientId) {
@@ -77,61 +59,8 @@ function referenceMapping () {
     })
 
 }
-// ok -verify user, if user is not craeted, crate user space and data space
-// ok -if user is created, update user loginStatus
-function handleUserAuthentication (user) {
-    var userObj;
-    var refId = "";
-    var userList;
-    
-    // verify in server
-    verifyUser().then(function(data) {
-        userList = data;
-        for (var id in data) {
-            if (data.hasOwnProperty(id)) {
-                // console.log(data[id]);
-                if (data[id].id === user.uid) {
-                    userObj = {};
-                    Object.assign(userObj, user);
-                    refId = id;
-                    break;
-                }
-            }
-        }
-    }).then(function() {
-        // if not in server, add user
-        if (!userObj) {
-            console.log("add user");
-            addUser(user);
-        } else { // if in server, update
-            console.log("already in server, update user status in refid", refId);
-            updateUserStatus(LOGIN, refId);
-        }
-        // when finish user sequence
-        referenceMapping().then(function () {
-            clientReferenceMapping(user.uid);
-        }).then(function() {
-            watchData('/users/' + refId, handleUserChange);
-        });
-        
-    });
-}
-    // ok - when someone want to chat with you, they will change your user profile, then this function happen
-    function handleUserChange (data) {
-        var watchId;
-        var watchLink = '/channel/' + getReferenceById(data.id) + '/message/' + getClientReferenceById(data.chatWith) + '/textList';
-        if (!data.isFree) {
-            // is occupy by other user
-            // watch message data of data.chatWith field
-            if (data.chatWith && data.chatWith.length) {
-                watchId = watchData(watchLink, messageChangeCallback);
-            }
-        } else {
-            // is free by other
-            // un-watch message data of data.chatWith field
-            unWatchData(watchLink, watchId);
-        }
-    }
+
+
     // TODO: update message to the view
     function messageChangeCallback (messageArray) {
         console.log("message change", messageArray);
@@ -171,12 +100,7 @@ function handleUserAuthentication (user) {
         });
     }
     // ok
-    function updateUserStatus(status, referenceId) {
-        var udpateValue = firebase.database().ref('users/' + referenceId);
-        // Modify the 'first' and 'last' properties, but leave other data at
-        // adaNameRef unchanged.
-        udpateValue.update({ loginStatus: status });
-    }
+    
     // ok
     // refer: https://firebase.google.com/docs/database/web/read-and-write
     function readData (link) {
