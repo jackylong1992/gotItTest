@@ -33,7 +33,7 @@ function handleUserAuthentication (user) {
             addUser(user);
         } else { // if in server, update
             console.log("already in server, update user status in refid", refId);
-            updateUserStatus(LOGIN, refId);
+            updateUserLoginStatus(LOGIN, refId);
         }
         
         

@@ -20,26 +20,49 @@ var userList = [
 var g_user = {
     uid: '',
     displayName: '',
-    onChannel: ''
+    onChannel: '',
+    clientId: ''
 };
 
 const LOGIN = true;
 const LOGOUT = false;
 
-handleUserAuthentication(userList[0]);
+handleUserAuthentication(userList[1]);
 // api test ok
 
 
 // ok - when someone want to chat with you, they will change your user profile, then this function happen
 function handleUserChange (data) {
-    console.log('user change', data);
+    console.log('my user info change', data);
+    if (data.chatWith && data.chatWith.length) {
+        // modify watch and sent link
+        g_user.onChannel = data.chatWith;
+        watchChatChannel();
+    }
 }
 
-function updateUserStatus(status, referenceId) {
+function updateUserLoginStatus(status, referenceId) {
     var udpateValue = firebase.database().ref('users/' + referenceId);
     // Modify the 'first' and 'last' properties, but leave other data at
     // adaNameRef unchanged.
     udpateValue.update({ loginStatus: status, chatWith : '', isFree : true });
+}
+
+function updateUserStatus(referenceId, isFree, chatWith) {
+    var udpateValue = firebase.database().ref('users/' + referenceId);
+    // Modify the 'first' and 'last' properties, but leave other data at
+    // adaNameRef unchanged.
+    udpateValue.update({chatWith : chatWith || '', isFree : isFree });
+}
+
+function isClientAvailable(reference) {
+    return readData('/users/' + reference).then(function(data) {
+        if (data.loginStatus && data.isFree) {
+            return true;
+        } else {
+            return false;
+        }
+    })
 }
 
 function watchMyInfo(refId) {
@@ -60,9 +83,25 @@ function updateUserList (list) {
     }
     $('#userList ul').html(bindHtml);
     $('#userList li').on('click', function() {
-        console.log(this.id);
+        g_user.clientId = this.id;
         var channelId = createChannelListId(this.id, g_user.uid);
-        isChatChannelExist(channelId).then(function (value) {
+        var promise = new Promise(function(resolve, reject) {
+            var clientRef = getReferenceById(g_user.clientId);
+            isClientAvailable(clientRef).then((isAcquired) => {
+                if(!isAcquired) {
+                    console.log("client is busy");
+                    reject();
+                } else {
+                    resolve();
+                }
+            })
+        })
+        .then(function() {
+            
+            return isChatChannelExist(channelId);
+        })
+        .then( (value) => {
+            if (value === null) return;
             console.log('channel isExist =', value);
             if (value) {
                 // get channel reference - auto get if channel exit
@@ -76,7 +115,9 @@ function updateUserList (list) {
                 // watch/update this channel
                 watchChatChannel();
             }
+            
         })
+        .then(acquireClient)
     });
 }
 
@@ -89,4 +130,24 @@ function createChannelListId (userId, clientId) {
     }
     console.log('channel id = ', ret)
     return ret;
+}
+// TODO: when user list change, we have to update the reference
+function acquireClient () {
+    var clientRef = getReferenceById(g_user.clientId);
+    updateUserStatus(clientRef, false, g_user.onChannel);
+    var myRef = getReferenceById(g_user.uid);
+    updateUserStatus(myRef, false, g_user.onChannel);
+    return true;
+}
+
+function releaseClient () {
+    if (!g_user.clientId)  {
+        console.log("not connected to any client");
+        return;
+    }
+    var clientRef = getReferenceById(g_user.clientId);
+    updateUserStatus(clientRef, true, "");
+    var myRef = getReferenceById(g_user.uid);
+    updateUserStatus(myRef, true, '');
+    g_user.clientId = '';
 }

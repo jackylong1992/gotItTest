@@ -49,7 +49,7 @@ function getReferenceById (userId) {
 }
 // ok - parse all user reference
 function referenceMapping () {
-    return readData('/channel').then(function(messageData) {
+    return readData('/users').then(function(messageData) {
         for (var userData in messageData) {
             referenceMap.push({id:messageData[userData].id, reference: userData })
             // for (var myClient in messageData[userData].message) {
