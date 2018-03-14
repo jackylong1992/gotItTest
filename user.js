@@ -21,8 +21,17 @@ const LOGOUT = 1;
 var referenceMap = [];
 var clientReferenceMap = [];
 
-handleUserAuthentication(userList[0]);
+//handleUserAuthentication(userList[0]);
+// createChatChannel ();
 
+watchChatChannel('/channel/-L7XCshe2qzEsYGrgBbf/');
+
+
+function sendMessage () {
+    console.log("send");
+    var message = $("#inputBox").val();
+    updateChatChannel ('/channel/-L7XCshe2qzEsYGrgBbf/', message, '2222');
+}
     // ok
 function getClientReferenceById (clientId) {
     console.log("getClientReference", clientId);
