@@ -19,3 +19,8 @@
     border: solid brown 5px;
     min-height: 600px;
 }
+
+.isLink {
+    text-decoration: underline;
+    color: blue;
+}

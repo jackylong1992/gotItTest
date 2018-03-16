@@ -26,7 +26,7 @@ function highlightURL(str) {
     return tempArr.reduce(function(acc, value) {
 		var temp;
         if (isURL(value)) {
-            temp =acc + ' <b>' + value + '</b> ';
+            temp =acc + ' <span class="isLink">' + value + '</span> ';
         } else {
             temp= acc + ' ' + value + ' ';
         }
