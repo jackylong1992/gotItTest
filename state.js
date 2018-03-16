@@ -1,10 +1,12 @@
 function changeToChatState() {
-    $('#messageSpace').show();
-    $('#messageSpace').html('');
+    // $('#messageSpace').show();
+    changeState('messageSpace');
+    $('#chatContent').html('');
 }
 
 function changeToMenuState() {
-    $('#messageSpace').hide();
+    // $('#messageSpace').hide();
+    changeState('container');
 }
 
 function showMessage(msgList) {
@@ -17,5 +19,25 @@ function showMessage(msgList) {
             bindHTML += '<li>' + highlightURL(msgList[message].text) + '</li>'
         }
     }
-    $('#messageSpace').html(bindHTML);
+    $('#chatContent').html(bindHTML);
+}
+
+function changeState (stateId) {
+    $('#messageSpace').hide();
+    $('#container').hide();
+    $('#chooseUser').hide();
+    switch (stateId) {
+        case 'messageSpace':
+        $('#messageSpace').show();
+            break;
+        case 'container':
+        $('#container').show();
+            break;
+        case 'chooseUser':
+        $('#chooseUser').show();
+            break;
+        defaut:
+            break;
+    }
+    return;
 }

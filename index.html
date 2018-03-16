@@ -6,25 +6,31 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="container">
+<body >
     <!-- Markup -->
     <h3 id='title'>this is test from jacky</h3>
-    <input id="chooseUser" type="number">
-    <button onclick="chooseUser()">Choose</button>
+    <div id="chooseUser">
+        
+        <input  type="number">
+        <button onclick="chooseUser()">Choose</button>
+    </div>
+    
     <div id="container" style="display:none">
         <div id='userList'>
             <ul>
                 waiting for user!!!
             </ul>
         </div>
-        <input id='inputBox' type="text">
-        <button onclick='sendMessage()'>Send</button>
-        <button onclick='releaseClient()'>Release client</button>
-        <div id="messageSpace">
-
-        </div>
+        
+        
     </div>
-    
+    <div id="messageSpace" style="display:none">
+        <div id='chatContent'></div>
+            <input id='inputBox' type="text">
+            <button onclick='sendMessage()'>Send</button>
+            <button onclick='releaseClient()'>Release client</button>
+        
+    </div>
     <!-- Dependencies -->
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <script>
