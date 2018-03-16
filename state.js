@@ -2,6 +2,7 @@ function changeToChatState() {
     // $('#messageSpace').show();
     changeState('messageSpace');
     $('#chatContent').html('');
+    
 }
 
 function changeToMenuState() {
@@ -21,6 +22,7 @@ function showMessage(msgList) {
         }
     }
     $('#chatContent').html(bindHTML);
+    $("#chatContent").scrollTop($("#chatContent")[0].scrollHeight);
 }
 
 function changeState (stateId) {

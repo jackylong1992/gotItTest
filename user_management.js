@@ -33,7 +33,8 @@ const LOGOUT = false;
 
 
 function chooseUser() {
-    handleUserAuthentication(userList[$('#chooseUser input').val()]);
+    handleUserAuthentication(userList[$('#chooseUser select').val()]);
+    // console.log($('#chooseUser select').val());
     $('#container').css("display","block");
 }
 

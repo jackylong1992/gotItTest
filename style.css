@@ -1,8 +1,9 @@
 #chatContent {
     width: 590px;
-    min-height:  600px;
+    height:  600px;
     background-color: #ccc;
     color: black;
+    overflow: auto;
 }
 
 .fromMe {

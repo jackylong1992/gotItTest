@@ -48,7 +48,9 @@ var referenceMap = [];
     function sendMessage () {
         // console.log("send");
         var message = $("#inputBox").val();
+        $("#inputBox").val('');
         updateChatChannel ( message, g_user.uid);
+        $("#chatContent").scrollTop($("#chatContent")[0].scrollHeight);
     }
 
     // ok - mapping from id to reference in channel space
