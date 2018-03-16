@@ -1,9 +1,8 @@
 #chatContent {
-    width: 600px;
+    width: 590px;
     min-height:  600px;
-    background-color: blue;
+    background-color: #ccc;
     color: black;
-    border: solid brown 5px;
 }
 
 .fromMe {
@@ -12,4 +11,11 @@
 
 .busy {
     color: red;
+}
+
+.layout {
+    width: 600px;
+    margin: auto;
+    border: solid brown 5px;
+    min-height: 600px;
 }

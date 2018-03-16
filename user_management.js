@@ -101,6 +101,7 @@ function updateUserList (list) {
     }
     $('#userList ul').html(bindHtml);
     $('#userList li').on('click', function() {
+        g_user.clientName = this.innerHTML;
         g_user.clientId = this.id;
         var channelId = createChannelListId(this.id, g_user.uid);
         var promise = new Promise(function(resolve, reject) {

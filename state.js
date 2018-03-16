@@ -7,11 +7,12 @@ function changeToChatState() {
 function changeToMenuState() {
     // $('#messageSpace').hide();
     changeState('container');
+    updateTitle(g_user.displayName, '');
 }
 
 function showMessage(msgList) {
     var bindHTML = '';
-    
+    updateTitle(g_user.displayName, g_user.clientName);
     for (var message in msgList) {
         if (msgList[message].from.toString() == g_user.uid.toString()) {
             bindHTML += '<li class=' +"fromMe" + '>' + highlightURL(msgList[message].text)+ '</li>'

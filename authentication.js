@@ -4,8 +4,13 @@
 // TODO: strang issue when add new member
 // ok -verify user, if user is not craeted, crate user space and data space
 // ok -if user is created, update user loginStatus
-function updateTitle(user) {
-    $('#title').html('this is test from ' + user.displayName);
+function updateTitle(user, client) {
+    if (client && client.length) {
+        $('#title').html('User: ' + user + '  Client: ' + client);
+    } else {
+        $('#title').html('User: ' + user);
+    }
+    
 }
 
 function handleUserAuthentication (user) {
@@ -14,7 +19,7 @@ function handleUserAuthentication (user) {
     var userList;
     
     Object.assign(g_user, user);
-    updateTitle(user);
+    updateTitle(user.displayName);
     // verify in server
     verifyUser()
     .then(function(data) {
