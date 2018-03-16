@@ -36,9 +36,6 @@ function chooseUser() {
     handleUserAuthentication(userList[$('#chooseUser input').val()]);
     $('#container').css("display","block");
 }
-//handleUserAuthentication(userList[1]);
-// api test ok
-
 
 // ok - when someone want to chat with you, they will change your user profile, then this function happen
 function handleUserChange (data) {
